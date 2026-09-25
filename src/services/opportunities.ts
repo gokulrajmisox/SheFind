@@ -72,6 +72,7 @@ function normalizeOpportunity(row: Record<string, unknown>): Opportunity {
 
 function startOfToday() { const date = new Date(); date.setHours(0, 0, 0, 0); return date.toISOString().slice(0, 10); }
 function addDays(days: number) { const date = new Date(); date.setDate(date.getDate() + days); return date.toISOString().slice(0, 10); }
+function escapeSearchTerm(value: string) { return value.trim().replace(/[\\,()*]/g, ' ').replace(/\s+/g, ' '); }
 
 export async function getOpportunities(filters: OpportunityFilters = {}) {
   const pageSize = filters.pageSize ?? 12;
@@ -82,7 +83,7 @@ export async function getOpportunities(filters: OpportunityFilters = {}) {
   if (filters.state && filters.state !== 'All India') query = query.ilike('state', `%${filters.state}%`);
   if (filters.educationLevel && filters.educationLevel !== 'Any') query = query.ilike('education_level', `%${filters.educationLevel}%`);
   if (filters.eligibility) query = query.ilike('eligibility_text', `%${filters.eligibility}%`);
-  if (filters.search?.trim()) { const term = filters.search.trim().replace(/[,()]/g, ' '); query = query.or(`title.ilike.%${term}%,organization.ilike.%${term}%,description.ilike.%${term}%,eligibility_text.ilike.%${term}%,category.ilike.%${term}%,subcategory.ilike.%${term}%`); }
+  if (filters.search?.trim()) { const term = escapeSearchTerm(filters.search); if (term) query = query.or(`title.ilike.%${term}%,organization.ilike.%${term}%,description.ilike.%${term}%,eligibility_text.ilike.%${term}%,category.ilike.%${term}%,subcategory.ilike.%${term}%`); }
   if (filters.deadline === 'week') query = query.gte('application_deadline', startOfToday()).lte('application_deadline', addDays(7));
   if (filters.deadline === 'month') query = query.gte('application_deadline', startOfToday()).lte('application_deadline', addDays(30));
   if (filters.deadline === 'later') query = query.gt('application_deadline', addDays(30));
