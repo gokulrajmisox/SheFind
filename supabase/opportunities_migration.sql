@@ -13,6 +13,11 @@ ALTER TABLE public.opportunities ADD COLUMN IF NOT EXISTS income_limit NUMERIC;
 ALTER TABLE public.opportunities ADD COLUMN IF NOT EXISTS documents_required TEXT[];
 ALTER TABLE public.opportunities ADD COLUMN IF NOT EXISTS application_start_date DATE;
 
+-- URLs are intentionally nullable for needs_review records. Do not force an
+-- unverified or unavailable application URL into the database.
+ALTER TABLE public.opportunities ALTER COLUMN official_source_url DROP NOT NULL;
+ALTER TABLE public.opportunities ALTER COLUMN official_application_url DROP NOT NULL;
+
 DO $$
 DECLARE
   state_type TEXT;

@@ -48,8 +48,8 @@ CREATE TABLE opportunities (
     documents_required TEXT[],
     application_start_date DATE,
     application_deadline DATE,
-    official_application_url TEXT NOT NULL,
-    official_source_url TEXT NOT NULL,
+    official_application_url TEXT,
+    official_source_url TEXT,
     status TEXT DEFAULT 'draft', -- draft, active, inactive
     verification_status TEXT DEFAULT 'pending', -- pending, verified, rejected
     verified_at TIMESTAMPTZ,
