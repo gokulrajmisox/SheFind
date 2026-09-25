@@ -102,18 +102,39 @@ CREATE TABLE verification_logs (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Authorization helper. SECURITY DEFINER prevents the admin_users RLS policy
+-- from recursively querying itself during an authorization check.
+CREATE OR REPLACE FUNCTION public.is_admin(required_role TEXT DEFAULT NULL)
+RETURNS BOOLEAN
+LANGUAGE SQL
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.admin_users
+    WHERE user_id = auth.uid()
+      AND (required_role IS NULL OR role = required_role)
+  );
+$$;
+
+REVOKE ALL ON FUNCTION public.is_admin(TEXT) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.is_admin(TEXT) TO authenticated;
+
 -- RLS Policies
 
 -- Profiles
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can read their own profile" ON profiles FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Users can update their own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "Users can create their own profile" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
 
 -- Opportunities
 ALTER TABLE opportunities ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anyone can read active and verified opportunities" ON opportunities FOR SELECT USING (status = 'active' AND verification_status = 'verified');
 CREATE POLICY "Admins can do everything on opportunities" ON opportunities TO authenticated USING (
-    EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid())
+    public.is_admin()
 );
 
 -- Saved Opportunities
@@ -128,17 +149,17 @@ CREATE POLICY "Users can manage their own reminders" ON reminders FOR ALL USING 
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anyone can read categories" ON categories FOR SELECT USING (true);
 CREATE POLICY "Admins can manage categories" ON categories FOR ALL TO authenticated USING (
-    EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid() AND role = 'admin')
+    public.is_admin('admin')
 );
 
 -- Admin Users
 ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Admins can read admin_users" ON admin_users FOR SELECT TO authenticated USING (
-    EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid() AND role = 'admin')
+    public.is_admin('admin')
 );
 
 -- Verification Logs
 ALTER TABLE verification_logs ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Admins can read verification logs" ON verification_logs FOR SELECT TO authenticated USING (
-    EXISTS (SELECT 1 FROM admin_users WHERE user_id = auth.uid())
+    public.is_admin()
 );

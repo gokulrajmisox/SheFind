@@ -2,10 +2,12 @@ import React from 'react';
 import { Outlet, Link, NavLink } from 'react-router-dom';
 import { LayoutDashboard, FileText, CheckSquare, Clock, Users, Activity, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/auth/useAuth';
 
 export function AdminLayout() {
+  const { signOut } = useAuth();
   const navItems = [
-    { name: 'Overview', path: '/admin', icon: LayoutDashboard },
+    { name: 'Overview', path: '/admin/dashboard', icon: LayoutDashboard },
     { name: 'Opportunities', path: '/admin/opportunities', icon: FileText },
     { name: 'Pending Verification', path: '/admin/verification', icon: CheckSquare },
     { name: 'Deadlines', path: '/admin/deadlines', icon: Clock },
@@ -27,7 +29,7 @@ export function AdminLayout() {
               <NavLink
                 key={item.name}
                 to={item.path}
-                end={item.path === '/admin'}
+                end={item.path === '/admin/dashboard'}
                 className={({ isActive }) => cn(
                   "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors",
                   isActive 
@@ -42,7 +44,7 @@ export function AdminLayout() {
           })}
         </nav>
         <div className="p-4 border-t border-border">
-          <button className="flex items-center w-full px-4 py-2 text-sm font-medium text-secondary hover:text-accent transition-colors">
+          <button onClick={() => void signOut()} className="flex items-center w-full px-4 py-2 text-sm font-medium text-secondary hover:text-accent transition-colors">
             <LogOut className="w-5 h-5 mr-3" />
             Sign Out
           </button>
