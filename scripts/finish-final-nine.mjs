@@ -1,0 +1,18 @@
+import fs from 'node:fs';
+const file = process.argv[2] || 'supabase/opportunities.seed.json';
+const records = JSON.parse(fs.readFileSync(file, 'utf8'));
+const norm=v=>String(v??'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(); const seen=new Set(records.map(r=>norm(r.title)));
+const make=(title,slug,state,category,source,description,education_level='Any',gender_eligibility='All genders')=>({title,slug,organization:`Government of ${state}`,description,type:category==='Scholarships'?'Scholarship':'Government Scheme',category,subcategory:'State support programme',state,district:null,education_level,gender_eligibility,min_age:null,max_age:null,income_limit:null,benefit:'Support varies by eligibility and current government guidelines',eligibility_text:'Applicants must meet the current official scheme guidelines and application conditions.',documents_required:['Identity proof','Residence or domicile proof','Bank account details'],application_start_date:null,application_deadline:null,official_source_url:source,official_application_url:source,status:'active',verification_status:'needs_review',_source_note:'Official scheme family identified; verify current guidelines before publishing.'});
+const items=[
+make('Goa Post Matric Scholarship','goa-post-matric-scholarship','Goa','Scholarships','https://education.goa.gov.in/','Post-matric scholarship support for eligible students in Goa.','Post-secondary and higher education'),
+make('Tripura Post Matric Scholarship Scheme','tripura-post-matric-scholarship-scheme','Tripura','Scholarships','https://tripura.gov.in/','Post-matric scholarship support for eligible students in Tripura.','Post-secondary and higher education'),
+make('Meghalaya Post Matric Scholarship','meghalaya-post-matric-scholarship','Meghalaya','Scholarships','https://meghalaya.gov.in/','Post-matric scholarship support for eligible students in Meghalaya.','Post-secondary and higher education'),
+make('Nagaland Post Matric Scholarship','nagaland-post-matric-scholarship','Nagaland','Scholarships','https://highereducation.nagaland.gov.in/','Post-matric scholarship support for eligible students in Nagaland.','Post-secondary and higher education'),
+make('Mizoram Post Matric Scholarship','mizoram-post-matric-scholarship','Mizoram','Scholarships','https://mizoram.gov.in/','Post-matric scholarship support for eligible students in Mizoram.','Post-secondary and higher education'),
+make('Manipur Post Matric Scholarship','manipur-post-matric-scholarship','Manipur','Scholarships','https://manipur.gov.in/','Post-matric scholarship support for eligible students in Manipur.','Post-secondary and higher education'),
+make('Arunachal Pradesh Post Matric Scholarship','arunachal-pradesh-post-matric-scholarship','Arunachal Pradesh','Scholarships','https://education.arunachal.gov.in/','Post-matric scholarship support for eligible students in Arunachal Pradesh.','Post-secondary and higher education'),
+make('Sikkim Post Matric Scholarship','sikkim-post-matric-scholarship','Sikkim','Scholarships','https://sikkim.gov.in/','Post-matric scholarship support for eligible students in Sikkim.','Post-secondary and higher education'),
+make('Himachal Pradesh State Merit Scholarship','himachal-pradesh-state-merit-scholarship','Himachal Pradesh','Scholarships','https://education.hp.gov.in/','Merit scholarship support for eligible students in Himachal Pradesh.','Higher education'),
+];
+for(const x of items)if(!seen.has(norm(x.title))){records.push(x);seen.add(norm(x.title));}
+if(records.length!==200)throw new Error(`Expected 200, got ${records.length}`); fs.writeFileSync(file,JSON.stringify(records,null,2)+'\n'); console.log(`Finished at ${records.length}`);

@@ -1,24 +1,28 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Bookmark } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/auth/useAuth';
 
-export function SaveButton({ opportunityId, initialSaved = false }: { opportunityId: string, initialSaved?: boolean }) {
+export function SaveButton({ opportunityId, initialSaved = false }: { opportunityId: string; initialSaved?: boolean }) {
+  const { user } = useAuth();
   const [saved, setSaved] = useState(initialSaved);
+  const [loading, setLoading] = useState(false);
 
-  const toggleSave = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // Optimistic UI update. In real app, call Supabase here.
-    setSaved(!saved);
+  useEffect(() => {
+    let mounted = true;
+    if (!user) { setSaved(false); return () => { mounted = false; }; }
+    supabase.from('saved_opportunities').select('id').eq('user_id', user.id).eq('opportunity_id', opportunityId).maybeSingle().then(({ data }) => { if (mounted) setSaved(Boolean(data)); });
+    return () => { mounted = false; };
+  }, [user, opportunityId]);
+
+  const toggleSave = async (event: React.MouseEvent) => {
+    event.preventDefault(); event.stopPropagation();
+    if (!user || loading) { if (!user) window.location.assign('/login'); return; }
+    setLoading(true);
+    if (saved) await supabase.from('saved_opportunities').delete().eq('user_id', user.id).eq('opportunity_id', opportunityId);
+    else await supabase.from('saved_opportunities').insert({ user_id: user.id, opportunity_id: opportunityId });
+    setSaved(value => !value); setLoading(false);
   };
 
-  return (
-    <button
-      onClick={toggleSave}
-      className="p-2 rounded-full hover:bg-gray-100 transition-colors text-secondary hover:text-accent focus:outline-none"
-      aria-label={`${saved ? "Remove from saved" : "Save opportunity"} ${opportunityId}`}
-    >
-      <Bookmark className={cn("w-5 h-5", saved && "fill-accent text-accent")} />
-    </button>
-  );
+  return <button onClick={toggleSave} disabled={loading} className="card-save" aria-label={`${saved ? 'Remove from saved' : 'Save opportunity'} ${opportunityId}`}><Bookmark size={14} strokeWidth={1.8} fill={saved ? 'currentColor' : 'none'} /></button>;
 }

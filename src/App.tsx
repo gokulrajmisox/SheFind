@@ -11,6 +11,7 @@ import { Signup } from './pages/Signup';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { AdminLogin } from './pages/AdminLogin';
 import { UserDashboard } from './pages/UserDashboard';
+import { Opportunities } from './admin/Opportunities';
 import { AdminProtectedRoute, PublicOnlyRoute, UserProtectedRoute } from './auth/RouteGuards';
 import './App.css';
 
@@ -40,7 +41,7 @@ function App() {
       <Route element={<AdminLayout />}>
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
-        <Route path="opportunities" element={<div className="p-8 text-xl">Manage Opportunities</div>} />
+        <Route path="opportunities" element={<Opportunities />} />
         <Route path="verification" element={<div className="p-8 text-xl">Pending Verification</div>} />
         <Route path="deadlines" element={<div className="p-8 text-xl">Deadlines</div>} />
         <Route path="users" element={<div className="p-8 text-xl">Users</div>} />

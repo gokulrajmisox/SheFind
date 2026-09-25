@@ -219,3 +219,11 @@
   .user-dashboard { padding:50px 18px 80px; }
   .dashboard-top h1 { font-size:42px; }
 }
+
+.filter-panel { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:18px; padding:16px; border:1px solid #ded7d2; border-radius:13px; background:#efebe4; }
+.filter-panel label { display:grid; gap:7px; color:#746b73; font-size:11px; font-weight:700; }
+.filter-panel select { min-height:40px; padding:0 10px; border:1px solid #ded7d2; border-radius:8px; background:#fffdf9; color:#241c24; font-size:12px; }
+.results-meta { margin:22px 0 0; color:#9b9197; font-size:11px; }
+.load-more { display:block; margin:32px auto 0; border:1px solid #7b2946; border-radius:999px; padding:11px 18px; background:transparent; color:#7b2946; font-size:12px; font-weight:700; cursor:pointer; }
+.load-more:hover { background:#7b2946; color:#fff; }
+@media (max-width: 620px) { .filter-panel { grid-template-columns:1fr; } }
