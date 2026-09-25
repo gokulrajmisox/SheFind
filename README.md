@@ -43,6 +43,7 @@ SheFind tackles these challenges through a targeted, user-centric approach:
 - **Smart Search:** Quickly locate specific programs using keywords.
 - **Category Filtering:** Filter schemes by specific demographic or focus categories (e.g., STEM, Minority, Single Girl Child).
 - **Education Level Filtering:** Narrow down programs based on the applicant's current educational pursuit (e.g., High School, Undergraduate, Ph.D.).
+- **SheFind Guide Chatbot:** Ask Gemini 3.8 Flash for plain-language guidance about scholarships, schemes, eligibility, documents, and next steps.
 
 ## 📸 Screenshots
 *(Replace these placeholder images with actual screenshots of the SheFind platform once available)*
@@ -75,10 +76,40 @@ We are a dedicated team passionate about leveraging technology for civic good an
 git clone https://github.com/gokulrajmisox/SheFind.git
 cd SheFind
 
-# Install dependencies and run (Placeholder)
-# npm install
-# npm run dev
+# Install dependencies and run locally
+npm install
+npm run dev
 ```
+
+## 🤖 Gemini Chatbot API
+
+SheFind includes a chatbot at `/chatbot` powered by Gemini 3.8 Flash. The browser sends messages to the same-origin Vercel serverless route at `/api/chat`; the route calls Gemini server-side. This keeps the Gemini API key out of the frontend bundle and out of public source code.
+
+### Vercel environment variables
+
+In **Vercel → Project Settings → Environment Variables**, add the following variables for Production, Preview, and Development:
+
+```env
+GEMINI_API_KEY=<your Gemini API key>
+GEMINI_MODEL=gemini-3.8-flash
+```
+
+Do not prefix the Gemini variables with `VITE_`. Variables beginning with `VITE_` are exposed to the browser. After adding or changing the variables, redeploy the Vercel project.
+
+The frontend-safe Supabase variables remain separate:
+
+```env
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=<your Supabase anon key>
+```
+
+### API files
+
+- [`api/chat.ts`](api/chat.ts) — secure Vercel serverless Gemini proxy.
+- [`src/pages/Chatbot.tsx`](src/pages/Chatbot.tsx) — chatbot interface and conversation state.
+- [`api/README.md`](api/README.md) — concise deployment reference.
+
+Never commit the Gemini key or place it in client-side code. If a key has been exposed publicly, revoke it and create a replacement before adding it to Vercel.
 
 ## 🤝 Contributing
 Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/gokulrajmisox/SheFind/issues) if you want to contribute.
