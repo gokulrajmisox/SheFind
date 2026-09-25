@@ -33,8 +33,9 @@ export function Chatbot() {
       const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, history: nextMessages.slice(-8) }) });
       const data = await response.json() as { reply?: string; error?: string };
       if (!response.ok) throw new Error(data.error || 'Unable to reach SheFind Guide right now.');
-      if (!data?.reply) throw new Error('The assistant returned an empty response.');
-      setMessages(current => [...current, { role: 'assistant', content: data.reply }]);
+      const reply = data.reply;
+      if (!reply) throw new Error('The assistant returned an empty response.');
+      setMessages(current => [...current, { role: 'assistant', content: reply }]);
     } catch (requestError) {
       const errorMessage = requestError instanceof Error ? requestError.message : String(requestError);
       setError(errorMessage || 'Unable to reach SheFind Guide right now.');
