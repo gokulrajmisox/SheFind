@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Bot, Check, LoaderCircle, Send, Sparkles, UserRound } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-
 type ChatMessage = { role: 'user' | 'assistant'; content: string };
 
 const starters = [
@@ -32,15 +30,14 @@ export function Chatbot() {
     setMessages(nextMessages);
     setSending(true);
     try {
-      const { data, error: functionError } = await supabase.functions.invoke('shefind-chatbot', {
-        body: { message, history: nextMessages.slice(-8) },
-      });
-      if (functionError) throw functionError;
+      const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, history: nextMessages.slice(-8) }) });
+      const data = await response.json() as { reply?: string; error?: string };
+      if (!response.ok) throw new Error(data.error || 'Unable to reach SheFind Guide right now.');
       if (!data?.reply) throw new Error('The assistant returned an empty response.');
       setMessages(current => [...current, { role: 'assistant', content: data.reply }]);
     } catch (requestError) {
       const errorMessage = requestError instanceof Error ? requestError.message : String(requestError);
-      setError(errorMessage.includes('404') || errorMessage.includes('NOT_FOUND') ? 'The SheFind Guide Edge Function is not deployed in Supabase yet. Deploy shefind-chatbot, then try again.' : errorMessage || 'Unable to reach SheFind Guide right now.');
+      setError(errorMessage || 'Unable to reach SheFind Guide right now.');
     } finally {
       setSending(false);
     }
