@@ -53,6 +53,27 @@ CREATE INDEX IF NOT EXISTS opportunities_public_browse_idx ON public.opportuniti
 CREATE INDEX IF NOT EXISTS opportunities_state_idx ON public.opportunities (state);
 CREATE INDEX IF NOT EXISTS opportunities_slug_idx ON public.opportunities (slug);
 
+-- The existing project may not have the authorization helper yet. Define it
+-- before creating policies that reference it. SECURITY DEFINER avoids recursive
+-- RLS evaluation when the helper checks admin_users.
+CREATE OR REPLACE FUNCTION public.is_admin(required_role TEXT DEFAULT NULL)
+RETURNS BOOLEAN
+LANGUAGE SQL
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.admin_users
+    WHERE user_id = auth.uid()
+      AND (required_role IS NULL OR role = required_role)
+  );
+$$;
+
+REVOKE ALL ON FUNCTION public.is_admin(TEXT) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.is_admin(TEXT) TO authenticated;
+
 DROP POLICY IF EXISTS "Admins can do everything on opportunities" ON public.opportunities;
 CREATE POLICY "Admins can do everything on opportunities" ON public.opportunities
   FOR ALL TO authenticated
