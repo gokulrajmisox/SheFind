@@ -39,7 +39,8 @@ export function Chatbot() {
       if (!data?.reply) throw new Error('The assistant returned an empty response.');
       setMessages(current => [...current, { role: 'assistant', content: data.reply }]);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : 'Unable to reach SheFind Guide right now.');
+      const errorMessage = requestError instanceof Error ? requestError.message : String(requestError);
+      setError(errorMessage.includes('404') || errorMessage.includes('NOT_FOUND') ? 'The SheFind Guide Edge Function is not deployed in Supabase yet. Deploy shefind-chatbot, then try again.' : errorMessage || 'Unable to reach SheFind Guide right now.');
     } finally {
       setSending(false);
     }
