@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 export function Navbar() {
   const navLinks = [
     { name: 'Discover', path: '/explore' },
+    { name: 'Guide', path: '/chatbot' },
     { name: 'How it works', path: '/how-it-works' },
     { name: 'Saved', path: '/saved' },
     { name: 'About', path: '/about' },

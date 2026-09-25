@@ -11,6 +11,7 @@ import { Signup } from './pages/Signup';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { AdminLogin } from './pages/AdminLogin';
 import { UserDashboard } from './pages/UserDashboard';
+import { Chatbot } from './pages/Chatbot';
 import { Opportunities } from './admin/Opportunities';
 import { AdminProtectedRoute, PublicOnlyRoute, UserProtectedRoute } from './auth/RouteGuards';
 import './App.css';
@@ -31,6 +32,7 @@ function App() {
     <Route path="/" element={<AppLayout />}>
       <Route index element={<Home />} />
       <Route path="explore" element={<Explore />} />
+      <Route path="chatbot" element={<Chatbot />} />
       <Route path="opportunity/:slug" element={<OpportunityDetails />} />
       <Route path="saved" element={<Saved />} />
       <Route path="how-it-works" element={<div className="p-8 text-center text-xl">How It Works Page</div>} />
