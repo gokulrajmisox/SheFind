@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, ArrowUpRight, CheckCircle2, ShieldCheck, Clock, MapPin, Briefcase } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { mockOpportunities } from '@/services/mockData';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';

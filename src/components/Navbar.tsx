@@ -1,54 +1,36 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Search } from 'lucide-react';
+import { Menu, Search } from 'lucide-react';
 import { Button } from './ui/Button';
 import { cn } from '@/lib/utils';
 
 export function Navbar() {
   const navLinks = [
-    { name: 'Scholarships', path: '/explore?category=scholarships' },
-    { name: 'Government Schemes', path: '/explore?category=schemes' },
-    { name: 'How It Works', path: '/how-it-works' },
+    { name: 'Discover', path: '/explore' },
+    { name: 'How it works', path: '/how-it-works' },
     { name: 'Saved', path: '/saved' },
     { name: 'About', path: '/about' },
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <Link to="/" className="text-2xl font-bold tracking-tight text-primary">
-              SheFind
-            </Link>
-          </div>
-          
-          <nav className="hidden md:flex space-x-8">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.name}
-                to={link.path}
-                className={({ isActive }) => cn(
-                  "text-sm font-medium transition-colors hover:text-primary",
-                  isActive ? "text-primary" : "text-secondary"
-                )}
-              >
-                {link.name}
-              </NavLink>
-            ))}
-          </nav>
-
-          <div className="flex items-center space-x-4">
-            <button className="text-secondary hover:text-primary transition-colors">
-              <Search className="w-5 h-5" />
-            </button>
-            <div className="hidden sm:flex items-center space-x-3 border-l border-border pl-4">
-              <Link to="/login" className="text-sm font-medium text-secondary hover:text-primary transition-colors">
-                Sign In
-              </Link>
-              <Button size="sm" variant="primary">Create Account</Button>
-            </div>
-          </div>
+    <header className="site-header sticky top-0 z-50 w-full">
+      <div className="site-header-inner">
+        <Link to="/" className="brand" aria-label="SheFind home">
+          <span className="brand-mark" aria-hidden="true" />
+          <span className="brand-name">SheFind</span>
+        </Link>
+        <nav className="nav-links" aria-label="Primary navigation">
+          {navLinks.map((link) => (
+            <NavLink key={link.name} to={link.path} className={({ isActive }) => cn('nav-link', isActive && 'active')}>
+              {link.name}
+            </NavLink>
+          ))}
+        </nav>
+        <div className="nav-actions">
+          <button className="nav-search" aria-label="Search"><Search size={18} strokeWidth={1.8} /></button>
+          <Link to="/login" className="nav-signin">Sign in</Link>
+          <Button size="sm" className="hidden sm:inline-flex">Join SheFind</Button>
+          <button className="mobile-menu" aria-label="Open menu"><Menu size={21} /></button>
         </div>
       </div>
     </header>

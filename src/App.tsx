@@ -7,6 +7,7 @@ import { Explore } from './pages/Explore';
 import { OpportunityDetails } from './pages/OpportunityDetails';
 import { Saved } from './pages/Saved';
 import { Dashboard } from './admin/Dashboard';
+import './App.css';
 
 function App() {
   return (

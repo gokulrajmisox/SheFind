@@ -16,7 +16,7 @@ export function SaveButton({ opportunityId, initialSaved = false }: { opportunit
     <button
       onClick={toggleSave}
       className="p-2 rounded-full hover:bg-gray-100 transition-colors text-secondary hover:text-accent focus:outline-none"
-      aria-label={saved ? "Remove from saved" : "Save opportunity"}
+      aria-label={`${saved ? "Remove from saved" : "Save opportunity"} ${opportunityId}`}
     >
       <Bookmark className={cn("w-5 h-5", saved && "fill-accent text-accent")} />
     </button>
