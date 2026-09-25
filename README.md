@@ -46,15 +46,15 @@ SheFind tackles these challenges through a targeted, user-centric approach:
 - **SheFind Guide Chatbot:** Ask Gemini 3.8 Flash for plain-language guidance about scholarships, schemes, eligibility, documents, and next steps.
 
 ## 📸 Screenshots
-*(Replace these placeholder images with actual screenshots of the SheFind platform once available)*
 
-| Home Page | Search & Filters |
-| :---: | :---: |
-| <img src="https://via.placeholder.com/500x300/f3f4f6/333333.png?text=Home+Page+Screenshot" alt="Home Page" width="400"/> | <img src="https://via.placeholder.com/500x300/f3f4f6/333333.png?text=Search+and+Filters+Screenshot" alt="Filters" width="400"/> |
+### Discover Opportunities
+<img src="./images/discover.png" alt="Discover Opportunities" width="800"/>
 
-| Scheme Details | Mobile Responsive View |
-| :---: | :---: |
-| <img src="https://via.placeholder.com/500x300/f3f4f6/333333.png?text=Scheme+Details+Screenshot" alt="Scheme Details" width="400"/> | <img src="https://via.placeholder.com/250x450/f3f4f6/333333.png?text=Mobile+View" alt="Mobile View" height="300"/> |
+### User Dashboard
+<img src="./images/dashboard.png" alt="User Dashboard" width="800"/>
+
+### Secure Login
+<img src="./images/login.png" alt="Secure Login" width="800"/>
 
 
 ## 👥 Meet the Team
